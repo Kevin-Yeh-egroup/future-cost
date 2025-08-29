@@ -123,7 +123,7 @@ export function FuturePlanningForm() {
 
     // 計算未來年份
     const currentYear = new Date().getFullYear()
-    const yearColumns = []
+    const yearColumns: number[] = []
     for (let i = 0; i < 6; i++) {
       yearColumns.push(currentYear + i)
     }
@@ -261,7 +261,12 @@ export function FuturePlanningForm() {
             </tr>`
 
     // 為每個支出項目創建行
-    const allExpenseItems = []
+    const allExpenseItems: Array<{
+      item: string;
+      amount: number;
+      targetYear: number;
+      memberName: string;
+    }> = []
     futureExpenses.forEach(expense => {
       const member = getFamilyMemberById(expense.familyMemberId)
       if (member) {
