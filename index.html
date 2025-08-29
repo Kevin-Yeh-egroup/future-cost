@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家庭未來支出規劃系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">家庭未來支出規劃系統</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                幫助您規劃家庭未來的重要支出，包括教育費用、結婚費用等，並產出詳細的規劃報告
+            </p>
+        </div>
+
+        <!-- Planning Content -->
+        <div id="planning-content">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                    家庭成員設定
+                </h2>
+                
+                <div id="family-members" class="space-y-4">
+                    <!-- Family members will be added here -->
+                </div>
+                
+                <button onclick="addFamilyMember()" class="mt-4 w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-4 rounded-md border border-blue-200 transition-colors">
+                    + 新增家庭成員
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    未來支出規劃
+                </h2>
+                
+                <div id="future-expenses" class="space-y-4">
+                    <!-- Future expenses will be added here -->
+                </div>
+                
+                <button onclick="addFutureExpense()" class="mt-4 w-full bg-green-50 hover:bg-green-100 text-green-700 font-medium py-2 px-4 rounded-md border border-green-200 transition-colors">
+                    + 新增未來支出項目
+                </button>
+
+                <!-- Summary -->
+                <div id="summary" class="mt-8 p-4 bg-blue-50 rounded-lg hidden">
+                    <h3 class="font-semibold text-lg mb-2">支出規劃總覽</h3>
+                    <div class="text-2xl font-bold text-blue-600" id="total-amount">0 元</div>
+                    
+                    <!-- Word 報告匯出按鈕 -->
+                    <div class="mt-4 text-center">
+                        <button onclick="exportToWord()" 
+                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 mx-auto">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            匯出 Word 報告
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold">家庭成員管理</h3>
+                </div>
+                <p class="text-gray-600">
+                    新增和管理家庭成員資訊，包括年齡和關係，為每個成員規劃專屬的未來支出。
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17h6l2 2H7l2-2zm-4-8a8 8 0 1116 0c0 2.5-5.5 6-8 6s-8-3.5-8-6z"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold">支出規劃</h3>
+                </div>
+                <p class="text-gray-600">
+                    為每個家庭成員規劃未來的重要支出項目，包括教育、結婚等重大人生事件。
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold">報告匯出</h3>
+                </div>
+                <p class="text-gray-600">
+                    將完整的支出規劃結果匯出為 Word 報告，方便保存和分享給家人討論。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let familyMembers = [
+            { id: '1', name: '我', currentAge: 45 },
+            { id: '2', name: '配偶', currentAge: 42 },
+            { id: '3', name: '長子', currentAge: 15 },
+            { id: '4', name: '次女', currentAge: 12 }
+        ];
+        let futureExpenses = [];
+
+        function addFamilyMember() {
+            const id = Date.now().toString();
+            const member = { id, name: '', currentAge: 0 };
+            familyMembers.push(member);
+            renderFamilyMembers();
+        }
+
+        function removeFamilyMember(id) {
+            familyMembers = familyMembers.filter(member => member.id !== id);
+            futureExpenses = futureExpenses.filter(expense => expense.familyMemberId !== id);
+            renderFamilyMembers();
+            renderFutureExpenses();
+            updateSummary();
+        }
+
+        function updateFamilyMember(id, field, value) {
+            const member = familyMembers.find(m => m.id === id);
+            if (member) {
+                member[field] = field === 'currentAge' ? parseInt(value) || 0 : value;
+                renderFamilyMembers();
+            }
+        }
+
+        function renderFamilyMembers() {
+            const container = document.getElementById('family-members');
+            container.innerHTML = familyMembers.map((member, index) => `
+                <div class="flex items-center gap-4 p-4 border rounded-lg bg-gray-50">
+                    <div class="flex-1 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">姓名/關係</label>
+                            <input type="text" value="${member.name}" 
+                                   onchange="updateFamilyMember('${member.id}', 'name', this.value)"
+                                   placeholder="例如：我、配偶、長子"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">目前年齡</label>
+                            <input type="number" value="${member.currentAge || ''}" 
+                                   onchange="updateFamilyMember('${member.id}', 'currentAge', this.value)"
+                                   placeholder="歲"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    ${index > 0 ? `
+                        <button onclick="removeFamilyMember('${member.id}')" 
+                                class="text-red-500 hover:text-red-700 p-2 rounded-md hover:bg-red-50">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function addFutureExpense() {
+            const id = Date.now().toString();
+            const expense = {
+                id,
+                item: '',
+                targetAge: 0,
+                amount: 0,
+                description: '',
+                familyMemberId: familyMembers[0]?.id || ''
+            };
+            futureExpenses.push(expense);
+            renderFutureExpenses();
+        }
+
+        function removeFutureExpense(id) {
+            futureExpenses = futureExpenses.filter(expense => expense.id !== id);
+            renderFutureExpenses();
+            updateSummary();
+        }
+
+        function updateFutureExpense(id, field, value) {
+            const expense = futureExpenses.find(e => e.id === id);
+            if (expense) {
+                if (field === 'targetAge' || field === 'amount') {
+                    expense[field] = parseInt(value) || 0;
+                } else {
+                    expense[field] = value;
+                }
+                renderFutureExpenses();
+                updateSummary();
+            }
+        }
+
+        function renderFutureExpenses() {
+            const container = document.getElementById('future-expenses');
+            container.innerHTML = futureExpenses.map(expense => {
+                const relatedMember = familyMembers.find(m => m.id === expense.familyMemberId);
+                const yearsFromNow = relatedMember ? Math.max(0, expense.targetAge - relatedMember.currentAge) : 0;
+                const monthlyAmount = yearsFromNow > 0 && expense.amount > 0 ? Math.round(expense.amount / (yearsFromNow * 12)) : 0;
+                
+                return `
+                    <div class="p-4 border rounded-lg space-y-4 bg-gray-50">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">相關成員</label>
+                                <select onchange="updateFutureExpense('${expense.id}', 'familyMemberId', this.value)"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    ${familyMembers.map(member => `
+                                        <option value="${member.id}" ${expense.familyMemberId === member.id ? 'selected' : ''}>
+                                            ${member.name} (${member.currentAge}歲)
+                                        </option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">支出項目</label>
+                                <input type="text" value="${expense.item}" 
+                                       onchange="updateFutureExpense('${expense.id}', 'item', this.value)"
+                                       placeholder="例如：大學學費、結婚費用"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">目標年齡 ${relatedMember ? `(${relatedMember.name})` : ''}</label>
+                                <input type="number" value="${expense.targetAge || ''}" 
+                                       onchange="updateFutureExpense('${expense.id}', 'targetAge', this.value)"
+                                       placeholder="歲"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">預估金額</label>
+                                <input type="number" value="${expense.amount || ''}" 
+                                       onchange="updateFutureExpense('${expense.id}', 'amount', this.value)"
+                                       placeholder="元"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">詳細說明</label>
+                            <input type="text" value="${expense.description}" 
+                                   onchange="updateFutureExpense('${expense.id}', 'description', this.value)"
+                                   placeholder="詳細描述這筆支出的用途和重要性"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        ${relatedMember && expense.targetAge > 0 ? `
+                            <div class="text-sm text-blue-700 bg-blue-50 p-3 rounded">
+                                <div class="font-medium mb-1">${relatedMember.name}的規劃</div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <span>距離目標時間：${yearsFromNow}年</span>
+                                    ${monthlyAmount > 0 ? `<span>建議月存：${monthlyAmount.toLocaleString()}元</span>` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+                        <button onclick="removeFutureExpense('${expense.id}')" 
+                                class="text-red-500 hover:text-red-700 text-sm font-medium">
+                            🗑️ 刪除此項目
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateSummary() {
+            const total = futureExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const summaryDiv = document.getElementById('summary');
+            const totalAmountDiv = document.getElementById('total-amount');
+            
+            if (total > 0) {
+                summaryDiv.classList.remove('hidden');
+                totalAmountDiv.textContent = total.toLocaleString() + ' 元';
+            } else {
+                summaryDiv.classList.add('hidden');
+            }
+        }
+
+        // Word 報告匯出功能 - 表格格式
+        function exportToWord() {
+            if (futureExpenses.length === 0) {
+                alert('請先新增支出項目才能匯出報告');
+                return;
+            }
+
+            const currentDate = new Date().toLocaleDateString('zh-TW');
+            const totalAmount = futureExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const currentYear = new Date().getFullYear();
+            const yearColumns = [];
+            for (let i = 0; i < 6; i++) {
+                yearColumns.push(currentYear + i);
+            }
+            
+            // 按成員分組
+            const groupedExpenses = {};
+            futureExpenses.forEach(expense => {
+                if (!groupedExpenses[expense.familyMemberId]) {
+                    groupedExpenses[expense.familyMemberId] = [];
+                }
+                groupedExpenses[expense.familyMemberId].push(expense);
+            });
+
+            // 建立 HTML 內容 - 表格格式
+            let htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>未來家庭支出盤點表</title>
+    <style>
+        body { 
+            font-family: 'Microsoft JhengHei', 'SimHei', Arial, sans-serif; 
+            margin: 30px; 
+            line-height: 1.4; 
+            color: #000;
+            background-color: #fff;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-title { 
+            font-size: 20px; 
+            font-weight: bold; 
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        .info-line {
+            text-align: right;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .main-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            border: 2px solid #000;
+            margin: 20px 0;
+        }
+        .main-table th, .main-table td { 
+            border: 1px solid #000; 
+            padding: 8px; 
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+        }
+        .main-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .member-header {
+            background-color: #e8e8e8;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            width: 40px;
+        }
+        .age-row {
+            background-color: #f8f8f8;
+            font-size: 11px;
+        }
+        .year-header {
+            background-color: #d0d0d0;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .amount-cell {
+            min-height: 25px;
+            font-size: 11px;
+        }
+        .expense-item {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 10px;
+        }
+        .total-row {
+            background-color: #e0e0e0;
+            font-weight: bold;
+        }
+        .notes {
+            margin-top: 30px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .notes-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+        @media print {
+            body { margin: 15px; }
+            .main-table { font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="main-title">未來家庭支出盤點表</div>
+        <div class="info-line">姓名：_________________</div>
+    </div>
+
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th class="member-header">成員/年齡</th>
+                ${yearColumns.map(year => `<th class="year-header">${year}年</th>`).join('')}
+            </tr>
+        </thead>
+        <tbody>`;
+
+            // 家庭成員年齡行
+            familyMembers.forEach(member => {
+                htmlContent += `
+            <tr>
+                <td class="member-header">${member.name}</td>
+                ${yearColumns.map(year => {
+                    const ageInYear = member.currentAge + (year - currentYear);
+                    return `<td class="age-row">${ageInYear}歲</td>`;
+                }).join('')}
+            </tr>`;
+            });
+
+            // 支出項目標題行
+            htmlContent += `
+            <tr>
+                <td class="expense-item">項目</td>
+                ${yearColumns.map(year => `<th class="year-header">${year}年</th>`).join('')}
+            </tr>`;
+
+            // 為每個支出項目創建行
+            const allExpenseItems = [];
+            futureExpenses.forEach(expense => {
+                const member = familyMembers.find(m => m.id === expense.familyMemberId);
+                if (member) {
+                    const yearsFromNow = Math.max(0, expense.targetAge - member.currentAge);
+                    const targetYear = currentYear + yearsFromNow;
+                    allExpenseItems.push({
+                        ...expense,
+                        targetYear,
+                        memberName: member.name
+                    });
+                }
+            });
+
+            // 按年份和成員排序
+            allExpenseItems.sort((a, b) => a.targetYear - b.targetYear || a.memberName.localeCompare(b.memberName));
+
+            // 添加支出項目行 - 只顯示有輸入的項目
+            allExpenseItems.forEach(expense => {
+                htmlContent += `
+            <tr>
+                <td class="expense-item">${expense.item} (${expense.memberName})</td>
+                ${yearColumns.map(year => {
+                    if (expense.targetYear === year) {
+                        return `<td class="amount-cell">${expense.amount.toLocaleString()}</td>`;
+                    }
+                    return `<td class="amount-cell"></td>`;
+                }).join('')}
+            </tr>`;
+            });
+
+            // 總計行
+            htmlContent += `
+            <tr class="total-row">
+                <td class="expense-item">總計</td>
+                ${yearColumns.map(year => {
+                    const yearTotal = allExpenseItems
+                        .filter(item => item.targetYear === year)
+                        .reduce((sum, item) => sum + item.amount, 0);
+                    return `<td class="amount-cell">${yearTotal > 0 ? yearTotal.toLocaleString() : ''}</td>`;
+                }).join('')}
+            </tr>`;
+
+            htmlContent += `
+        </tbody>
+    </table>
+
+    <div class="notes">
+        <div class="notes-title">規劃說明：</div>
+        <div>1. 本表格用於記錄家庭未來 ${yearColumns.length} 年內的重要支出規劃</div>
+        <div>2. 請根據家庭成員的年齡增長，規劃各年度可能的重大支出</div>
+        <div>3. 支出項目包括但不限於：教育費用、結婚費用、購屋費用、醫療費用等</div>
+        <div>4. 金額單位為新台幣（元），可依實際需求調整</div>
+        <div>5. 建議每年檢視並更新此規劃表</div>
+    </div>
+
+    <div class="notes">
+        <div class="notes-title">目前規劃項目明細：</div>`;
+
+            // 添加詳細項目說明
+            Object.entries(groupedExpenses).forEach(([memberId, expenses]) => {
+                const member = familyMembers.find(m => m.id === memberId);
+                if (!member) return;
+
+                htmlContent += `
+        <div style="margin: 15px 0;">
+            <strong>${member.name} (${member.currentAge}歲)：</strong>
+            <ul style="margin: 5px 0; padding-left: 20px;">`;
+
+                expenses.forEach(expense => {
+                    const yearsFromNow = Math.max(0, expense.targetAge - member.currentAge);
+                    const targetYear = currentYear + yearsFromNow;
+                    htmlContent += `
+                <li>${expense.item} - ${targetYear}年 (${expense.targetAge}歲) - ${expense.amount.toLocaleString()}元
+                    ${expense.description ? ` - ${expense.description}` : ''}
+                </li>`;
+                });
+
+                htmlContent += `
+            </ul>
+        </div>`;
+            });
+
+            htmlContent += `
+    </div>
+
+    <div class="footer">
+        <p>報告產生時間：${new Date().toLocaleString('zh-TW')}</p>
+        <p>家庭未來支出規劃系統 - 讓理財規劃更簡單</p>
+    </div>
+</body>
+</html>`;
+
+            // 建立並下載檔案
+            const blob = new Blob([htmlContent], { type: 'application/msword;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `未來家庭支出盤點表_${new Date().toISOString().split('T')[0]}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            alert('Word 報告已成功匯出！');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFamilyMembers();
+            renderFutureExpenses();
+            updateSummary();
+        });
+    </script>
+</body>
+</html>
